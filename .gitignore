@@ -1,0 +1,5 @@
+__pycache__/       # Ignorar cache do Python
+*.pyc              # Ignorar arquivos compilados do Python
+.DS_Store          # Arquivo oculto do macOS (caso trabalhe em múltiplos sistemas)
+response.json      # Ignorar resposta do AWS Textract para evitar reenvios desnecessários
+.env               # Arquivo de credenciais (se for usar)
