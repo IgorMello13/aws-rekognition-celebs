@@ -10,7 +10,7 @@ rekognition_client = boto3.client("rekognition")
 # Diretórios padrão
 IMAGE_DIR = Path("images").resolve()
 OUTPUT_DIR = Path("output").resolve()
-OUTPUT_DIR.mkdir(exist_ok=True)  # Garante que a pasta de saída existe
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)  # Garante que a pasta seja criada se não existir
 
 
 class CelebrityRecognizer:
@@ -47,8 +47,16 @@ class CelebrityRecognizer:
             if confidence > 90:
                 draw.rectangle([left, top, right, bottom], outline="blue", width=3)
 
-                text = celeb.get("Name", "Desconhecido")
-                draw.text((left, top - 15), text, font=font, fill="white")
+                # Define a posição do texto
+                text_x = left
+                text_y = max(top - 25, 0)  # Evita que o texto fique fora da imagem
+
+                # Obtém a caixa de texto e adiciona fundo preto
+                text_size = draw.textbbox((text_x, text_y), celeb.get("Name", "Desconhecido"), font=font)
+                draw.rectangle(text_size, fill="black")
+
+                # Desenha o nome da celebridade sobre o fundo preto
+                draw.text((text_x, text_y), celeb.get("Name", "Desconhecido"), font=font, fill="white")
 
         image.save(self.output_path)
         print(f"✅ Imagem processada e salva: {self.output_path}")
